@@ -95,11 +95,20 @@ const game = () => {
         gameboard.resetBoard();
     }
 
+    const updateTurn = (turn) => {
+        if (getCurrentPlayer() === player1){
+            turn.innerText = 'Player 1 turn!';
+        } else {
+            turn.innerText = 'Player 2 turn!';
+        }
+    }
+
     return{
         getCurrentPlayer,
         changeBoard,
         checkBoard,
-        resetGame
+        resetGame,
+        updateTurn
     };
 }
 
@@ -108,9 +117,11 @@ var wonGame = false;
 const gameTiles = document.querySelectorAll('.game-tile');
 const resultText = document.getElementById('result');
 const resetButton = document.getElementById('reset-button');
+const turnText = document.getElementById('turn');
 
 resetButton.addEventListener('click', function(){
     currentGame.resetGame();
+    currentGame.updateTurn(turnText);
     wonGame = false;
     gameTiles.forEach(tile => {
         tile.innerText = null;
@@ -126,17 +137,20 @@ gameTiles.forEach(tile => {
             
             if (currentGame.changeBoard(tile.dataset.number)){
                 tile.innerText = currentGame.getCurrentPlayer().sign;
+                currentGame.updateTurn(turnText);
                 boardCheck = currentGame.checkBoard();
                 if (boardCheck === 'Player 1' || boardCheck === 'Player 2'){
                     gameTiles.forEach(tile => {
                         wonGame = true;
                         tile.style.backgroundColor = 'green';
+                        turnText.innerHTML = 'Victory!';
                     })
                     resultText.innerText = boardCheck + ' won!';
                 } else if (boardCheck === 'Draw'){
                     gameTiles.forEach(tile => {
                         wonGame = true;
                         tile.style.backgroundColor = 'red';
+                        turnText.innerText = 'Draw!';
                     })
                     resultText.innerText = 'Draw!';
                 }

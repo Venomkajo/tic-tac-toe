@@ -7,11 +7,11 @@ body
     background-color: black;
 }
 
-.header, .result, .reset
+.header, .result, .reset, .turn
 {
     color: white;
     font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .game-container
