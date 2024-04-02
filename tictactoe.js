@@ -59,6 +59,10 @@ const game = () => {
         const currentBoard = gameboard.getBoard();
         let count = 0;
 
+        if (!currentBoard.includes(null)){
+            return 'Draw';
+        }
+
         for (let i = 0; i < possibilities.length; i++){
             count = 0;
             for (let j = 0; j < possibilities[i].length; j++){
@@ -67,7 +71,7 @@ const game = () => {
                 }
             }
             if (count === 3){
-                return "player1";
+                return "Player 1";
             }
             count = 0;
 
@@ -77,12 +81,12 @@ const game = () => {
                 }
             }
             if (count === 3){
-                return "player2";
+                return "Player 2";
             }
             count = 0;
         }
 
-        return false;
+        return '';
     }
 
     const resetGame = () => {
@@ -122,12 +126,19 @@ gameTiles.forEach(tile => {
             
             if (currentGame.changeBoard(tile.dataset.number)){
                 tile.innerText = currentGame.getCurrentPlayer().sign;
-                if (currentGame.checkBoard()){
+                boardCheck = currentGame.checkBoard();
+                if (boardCheck === 'Player 1' || boardCheck === 'Player 2'){
                     gameTiles.forEach(tile => {
                         wonGame = true;
                         tile.style.backgroundColor = 'green';
                     })
-                    resultText.innerText = 'Game over!';
+                    resultText.innerText = boardCheck + ' won!';
+                } else if (boardCheck === 'Draw'){
+                    gameTiles.forEach(tile => {
+                        wonGame = true;
+                        tile.style.backgroundColor = 'red';
+                    })
+                    resultText.innerText = 'Draw!';
                 }
             }
         }
