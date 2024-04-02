@@ -14,9 +14,14 @@ const createGameboard = () => {
         }
     }
 
+    const resetBoard = () => {
+        board = Array(9).fill(null);
+    }
+
     return {
         updateBoard,
-        getBoard
+        getBoard,
+        resetBoard
     };
 };
 
@@ -80,23 +85,51 @@ const game = () => {
         return false;
     }
 
+    const resetGame = () => {
+        player1.turn = true;
+        player2.turn = false;
+        gameboard.resetBoard();
+    }
+
     return{
         getCurrentPlayer,
         changeBoard,
-        checkBoard
+        checkBoard,
+        resetGame
     };
 }
 
 var currentGame = game();
-var gameTiles = document.querySelectorAll('.game-tile');
+var wonGame = false;
+const gameTiles = document.querySelectorAll('.game-tile');
+const resultText = document.getElementById('result');
+const resetButton = document.getElementById('reset-button');
+
+resetButton.addEventListener('click', function(){
+    currentGame.resetGame();
+    wonGame = false;
+    gameTiles.forEach(tile => {
+        tile.innerText = null;
+        tile.style.backgroundColor = 'yellowgreen';
+    })
+    resultText.innerText = 'The game is on!';
+});
 
 gameTiles.forEach(tile => {
     tile.addEventListener('click', function(){
-        console.log('pressed ' + tile.dataset.number);
-
-        if (currentGame.changeBoard(tile.dataset.number)){
-            tile.innerText = currentGame.getCurrentPlayer().sign;
-            console.log(currentGame.checkBoard());
+        if (wonGame === false){
+            console.log('pressed ' + tile.dataset.number);
+            
+            if (currentGame.changeBoard(tile.dataset.number)){
+                tile.innerText = currentGame.getCurrentPlayer().sign;
+                if (currentGame.checkBoard()){
+                    gameTiles.forEach(tile => {
+                        wonGame = true;
+                        tile.style.backgroundColor = 'green';
+                    })
+                    resultText.innerText = 'Game over!';
+                }
+            }
         }
     })
 })
