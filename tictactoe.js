@@ -1,38 +1,69 @@
 const createGameboard = () => {
-    let board = [];
-
-    const createBoard = () => {
-        board = Array(9).fill(null);
-    };
+    let board = Array(9).fill(null);
 
     const getBoard = () => {
-        return board;
+            return board;
     };
 
-    return {
-        createBoard,
-        getBoard
-    };
-};
-
-const createPlayer = (number, sign) => {
-    return {
-        number,
-        sign
-    };
-};
-
-const game = (tileId, getBoard, getCurrentPlayer) => {
-    updateBoard = () => {
-        const currentBoard = getBoard();
-        const currentPlayer = getCurrentPlayer();
-
-        if (currentBoard[tileId] === null){
-            currentPlayer.sign = currentBoard[tileId];
+    const updateBoard = (index, sign) => {
+        if (board[index] === null){
+            board[index] = sign;
+            return true;
+        } else {
+            return false;
         }
     }
 
     return {
-        updateBoard
+        updateBoard,
+        getBoard
+    };
+};
+
+const getPlayer = (number, sign, turn) => {
+    return {
+        number,
+        sign,
+        turn
+    };
+};
+
+const game = () => {
+    const player1 = getPlayer(1, 'X', true);
+    const player2 = getPlayer(2, 'O', false);
+    const gameboard = createGameboard();
+
+    const getCurrentPlayer = () =>{
+        return player1.turn ? player1 : player2;
+    }
+
+    const changeBoard = (tileId) =>{
+        const currentPlayer = getCurrentPlayer();
+        if (gameboard.updateBoard(tileId, currentPlayer.sign)){
+            player1.turn = !player1.turn;
+            player2.turn = !player2.turn;
+
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    return{
+        getCurrentPlayer,
+        changeBoard
     };
 }
+
+var currentGame = game();
+var gameTiles = document.querySelectorAll('.game-tile');
+
+gameTiles.forEach(tile => {
+    tile.addEventListener('click', function(){
+        console.log('pressed ' + tile.dataset.number);
+
+        if (currentGame.changeBoard(tile.dataset.number)){
+            tile.innerText = currentGame.getCurrentPlayer().sign;
+        }
+    })
+})

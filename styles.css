@@ -4,12 +4,14 @@ body
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: lightgoldenrodyellow;
+    background-color: black;
 }
 
 .header
 {
+    color: white;
     font-size: 24px;
+    margin-bottom: 25px;
 }
 
 .game-container
